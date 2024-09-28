@@ -13,18 +13,26 @@
         <nav>
             <div class="logo">Sport Focus</div>
             <ul>
-                <li><a href=""><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="gallery"><i class="fas fa-camera"></i> Gallery</a></li>
-                <li><a href="about"><i class="fas fa-user"></i> About</a></li>
-                <li><a href="services"><i class="fas fa-cogs"></i> Services</a></li>
-                <li><a href="contact"><i class="fas fa-envelope"></i> Contact</a></li>
+                <li><a href="#home"><i class="fas fa-home"></i> Home</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn"><i class="fas fa-camera"></i> Gallery <i class="fas fa-caret-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="/sports">Sports</a>
+                        <a href="/featured">Featured</a>
+                        <a href="/events">Events</a>
+                        <a href="/portraits">Portraits</a>
+                    </div>
+                </li>
+                <li><a href="#about"><i class="fas fa-user"></i> About</a></li>
+                <li><a href="#services"><i class="fas fa-cogs"></i> Services</a></li>
+                <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
             </ul>
             <div class="menu-toggle"><i class="fas fa-bars"></i></div>
         </nav>
     </header>
 
     <main>
-        <section id="home" class="parallax-section">
+        <section id="home" class="parallax-section" data-speed="0.5">
             <div class="content">
                 <h1 data-aos="fade-up">Sport Focus</h1>
                 <p data-aos="fade-up" data-aos-delay="200">by Manav</p>
@@ -34,27 +42,33 @@
 
         <section id="gallery">
             <h2 data-aos="fade-up">Featured Gallery</h2>
+            <div class="gallery-filter" data-aos="fade-up">
+                <button class="tab-button active" data-category="all">All</button>
+                <button class="tab-button" data-category="sports">Sports</button>
+                <button class="tab-button" data-category="events">Events</button>
+                <button class="tab-button" data-category="portraits">Portraits</button>
+            </div>
             <div class="gallery-container">
-                <div class="gallery-item" data-aos="zoom-in">
-                    <img src="https://picsum.photos/200/300?grayscale" alt="Sport Photography 1">
+                <div class="gallery-item" data-aos="zoom-in" data-category="sports">
+                    <img src="https://picsum.photos/200/300?grayscale" alt="Sport Photography 1" data-src="https://picsum.photos/200/300?grayscale">
                     <div class="overlay">
                         <span>Football Action</span>
                     </div>
                 </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">
-                    <img src="https://picsum.photos/200/300?grayscale" alt="Sport Photography 2">
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100" data-category="sports">
+                    <img src="https://picsum.photos/200/300?grayscale" alt="Sport Photography 2" data-src="https://picsum.photos/200/300?grayscale">
                     <div class="overlay">
                         <span>Basketball Intensity</span>
                     </div>
                 </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200">
-                    <img src="https://picsum.photos/200/300?grayscale" alt="Sport Photography 3">
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200" data-category="events">
+                    <img src="https://picsum.photos/200/300?grayscale" alt="Sport Photography 3" data-src="https://picsum.photos/200/300?grayscale">
                     <div class="overlay">
                         <span>Swimming Champions</span>
                     </div>
                 </div>
-                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300">
-                    <img src="https://picsum.photos/200/300?grayscale" alt="Sport Photography 4">
+                <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300" data-category="portraits">
+                    <img src="https://picsum.photos/200/300?grayscale" alt="Sport Photography 4" data-src="https://picsum.photos/200/300?grayscale">
                     <div class="overlay">
                         <span>Tennis Precision</span>
                     </div>
@@ -62,7 +76,7 @@
             </div>
         </section>
 
-        <section id="about" class="parallax-section">
+        <section id="about" class="parallax-section" data-speed="0.3">
             <div class="content">
                 <h2 data-aos="fade-up">About Manav</h2>
                 <p data-aos="fade-up" data-aos-delay="200">Passionate sports photographer with over a decade of experience capturing the intensity, grace, and drama of athletic performances across various disciplines.</p>
