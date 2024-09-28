@@ -173,4 +173,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         input.classList.remove('error');
     }
+
+    // Gallery dropdown functionality
+    const galleryDropdown = document.querySelector('.dropdown');
+    const dropdownContent = document.querySelector('.dropdown-content');
+
+    galleryDropdown.addEventListener('mouseenter', () => {
+        dropdownContent.style.display = 'block';
+    });
+
+    galleryDropdown.addEventListener('mouseleave', () => {
+        dropdownContent.style.display = 'none';
+    });
+
+    // Enhance gallery item hover effect
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    galleryItems.forEach(item => {
+        item.addEventListener('mouseenter', () => {
+            item.querySelector('.overlay').style.opacity = '1';
+        });
+        item.addEventListener('mouseleave', () => {
+            item.querySelector('.overlay').style.opacity = '0';
+        });
+    });
+
+    // Add scroll-to-top button
+    const scrollTopButton = document.createElement('button');
+    scrollTopButton.innerHTML = '<i class="fas fa-chevron-up"></i>';
+    scrollTopButton.className = 'scroll-top-btn';
+    document.body.appendChild(scrollTopButton);
+
+    scrollTopButton.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+            scrollTopButton.style.display = 'block';
+        } else {
+            scrollTopButton.style.display = 'none';
+        }
+    });
 });
