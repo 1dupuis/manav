@@ -71,7 +71,7 @@ body {
     max-width: 100%;
     height: auto;
     object-fit: contain;
-    max-height: 30vh; /* Limit height to 30% of viewport height */
+    max-height: 50vh; /* Limit height to 30% of viewport height */
 }
 
 .nav-links {
