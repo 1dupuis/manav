@@ -175,11 +175,11 @@ body {
 }
 
 #home {
-    background-image: url('picsum.photos/2000/2000');
+    background-image: url('https://picsum.photos/2000/2000');
 }
 
 #about {
-    background-image: url('picsum.photos/2000/2000');
+    background-image: url('https://picsum.photos/2000/2000');
 }
 
 .content {
