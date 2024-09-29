@@ -70,8 +70,6 @@ body {
     position: relative;
 }
 
-/* ... (previous CSS styles) ... */
-
 .nav-links li a {
     color: var(--light-text-color);
     text-decoration: none;
@@ -163,11 +161,11 @@ body {
 }
 
 #home {
-    background-image: url('images/hero-bg.jpg');
+    background-image: url('https://picsum.photos/1080');
 }
 
 #about {
-    background-image: url('images/about-bg.jpg');
+    background-image: url('https://picsum.photos/1080');
 }
 
 .content {
