@@ -123,11 +123,11 @@ nav ul li a:hover {
 }
 
 #home {
-    background-image: url('https://picsum.photos/200/300?grayscale');
+    background-image: url('https://picsum.photos/800/800?grayscale');
 }
 
 #about {
-    background-image: url('https://picsum.photos/200/300?grayscale');
+    background-image: url('https://picsum.photos/800/800?grayscale');
 }
 
 .content {
