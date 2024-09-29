@@ -31,10 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Parallax effect for fullscreen background
     const parallaxSections = document.querySelectorAll('.parallax-section');
     const parallaxEffect = () => {
-        const scrollPosition = window.pageYOffset;
         parallaxSections.forEach(section => {
-            const speed = parseFloat(section.dataset.speed) || 0.5;
-            section.style.backgroundPositionY = `${scrollPosition * speed}px`;
+            const scrollPosition = window.pageYOffset;
+            const speed = 0.5;
+            section.style.backgroundPositionY = `${-(scrollPosition * speed)}px`;
         });
     };
 
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Mobile menu toggle
     const menuToggle = document.querySelector('.menu-toggle');
-    const navList = document.querySelector('nav ul');
+    const navList = document.querySelector('.nav-links');
 
     menuToggle.addEventListener('click', () => {
         navList.classList.toggle('show');
@@ -174,34 +174,16 @@ document.addEventListener('DOMContentLoaded', () => {
         input.classList.remove('error');
     }
 
-    // Gallery dropdown functionality
-    const galleryDropdown = document.querySelector('.dropdown');
-    const dropdownContent = document.querySelector('.dropdown-content');
+    // Scroll to top button
+    const scrollTopButton = document.getElementById('scroll-top');
 
-    galleryDropdown.addEventListener('mouseenter', () => {
-        dropdownContent.style.display = 'block';
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+            scrollTopButton.classList.add('show');
+        } else {
+            scrollTopButton.classList.remove('show');
+        }
     });
-
-    galleryDropdown.addEventListener('mouseleave', () => {
-        dropdownContent.style.display = 'none';
-    });
-
-    // Enhance gallery item hover effect
-    const galleryItems = document.querySelectorAll('.gallery-item');
-    galleryItems.forEach(item => {
-        item.addEventListener('mouseenter', () => {
-            item.querySelector('.overlay').style.opacity = '1';
-        });
-        item.addEventListener('mouseleave', () => {
-            item.querySelector('.overlay').style.opacity = '0';
-        });
-    });
-
-    // Add scroll-to-top button
-    const scrollTopButton = document.createElement('button');
-    scrollTopButton.innerHTML = '<i class="fas fa-chevron-up"></i>';
-    scrollTopButton.className = 'scroll-top-btn';
-    document.body.appendChild(scrollTopButton);
 
     scrollTopButton.addEventListener('click', () => {
         window.scrollTo({
@@ -210,11 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Animate on scroll refresh
     window.addEventListener('scroll', () => {
-        if (window.pageYOffset > 300) {
-            scrollTopButton.style.display = 'block';
-        } else {
-            scrollTopButton.style.display = 'none';
-        }
+        AOS.refresh();
     });
 });
