@@ -46,6 +46,11 @@ nav {
     font-weight: 700;
 }
 
+.logo-image {
+    max-width: 300px;
+    height: auto;
+}
+
 nav ul {
     display: flex;
     list-style-type: none;
