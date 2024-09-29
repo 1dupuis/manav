@@ -175,11 +175,11 @@ body {
 }
 
 #home {
-    background-image: url('/manav/images/backgrounds/home-bg.jpg');
+    background-image: url('picsum.photos/2000/2000');
 }
 
 #about {
-    background-image: url('/manav/images/backgrounds/about-bg.jpg');
+    background-image: url('picsum.photos/2000/2000');
 }
 
 .content {
