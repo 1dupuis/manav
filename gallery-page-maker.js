@@ -45,58 +45,57 @@ function createGalleryPage(title) {
     });
 
     // Function to load images
-    async function loadImages() {
+    function loadImages() {
         const pageName = window.location.pathname.split('/').pop().replace('.html', '').toLowerCase();
-        const imageDir = `/manav/images/${pageName}/`;
+        const images = galleryConfig[pageName] || [];
 
-        try {
-            const response = await fetch(imageDir);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            const text = await response.text();
-
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(text, 'text/html');
-            const links = Array.from(htmlDoc.getElementsByTagName('a'));
-            const imageLinks = links.filter(link => link.href.match(/\.(jpg|jpeg|png|gif)$/i));
-
-            if (imageLinks.length === 0) {
-                throw new Error('No images found in the directory');
-            }
-
-            const photoGrid = document.getElementById('photo-grid');
-            imageLinks.forEach((link, index) => {
-                const photoItem = document.createElement('div');
-                photoItem.className = 'photo-item' + (index === 0 ? ' large' : '');
-
-                const img = document.createElement('img');
-                img.src = imageDir + link.href.split('/').pop();
-                img.alt = `Image ${index + 1}`;
-                img.loading = 'lazy';
-
-                const caption = document.createElement('div');
-                caption.className = 'photo-caption';
-                caption.textContent = `Image ${index + 1}`;
-
-                photoItem.appendChild(img);
-                photoItem.appendChild(caption);
-                photoGrid.appendChild(photoItem);
-            });
-        } catch (error) {
-            console.error('Error loading images:', error);
-            fallbackImageLoad();
-        }
-    }
-
-    // Fallback function to load images if directory listing fails
-    function fallbackImageLoad() {
         const photoGrid = document.getElementById('photo-grid');
-        photoGrid.innerHTML = '<p>Unable to load images. Please check your connection and try again.</p>';
-        
-        // You could also add some default images here if you have them
-        // const defaultImages = ['default1.jpg', 'default2.jpg', 'default3.jpg'];
-        // defaultImages.forEach((img, index) => {
-        //     // Create image elements similar to the loadImages function
-        // });
+
+        if (images.length === 0) {
+            photoGrid.innerHTML = '<p>No images found for this gallery.</p>';
+            return;
+        }
+
+        images.forEach((image, index) => {
+            const photoItem = document.createElement('div');
+            photoItem.className = 'photo-item' + (index === 0 ? ' large' : '');
+
+            const img = document.createElement('img');
+            img.src = `/manav/images/${pageName}/${image.src}`;
+            img.alt = image.caption;
+            img.loading = 'lazy';
+
+            // Add error handling for individual images
+            img.onerror = function() {
+                this.onerror = null; // Prevent infinite loop
+                this.src = 'https://via.placeholder.com/400x300?text=Image+Not+Found';
+                this.alt = 'Image not found';
+            };
+
+            const caption = document.createElement('div');
+            caption.className = 'photo-caption';
+            caption.textContent = image.caption;
+
+            photoItem.appendChild(img);
+            photoItem.appendChild(caption);
+            photoGrid.appendChild(photoItem);
+        });
+
+        // Add lazy loading
+        if ('IntersectionObserver' in window) {
+            const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const image = entry.target;
+                        image.src = image.src; // Trigger load
+                        imageObserver.unobserve(image);
+                    }
+                });
+            });
+
+            lazyImages.forEach(img => imageObserver.observe(img));
+        }
     }
 
     // Call loadImages when the DOM is fully loaded
