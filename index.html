@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sport Focus by Manav | Professional Photography</title>
+    <meta name="description" content="Sport Focus by Manav - Professional Sports Photography">
+    <title>Sport Focus by Manav | Professional Sports Photography</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <link rel="stylesheet" href="styles.css">
@@ -12,15 +13,15 @@
     <header>
         <nav>
             <div class="logo">Sport Focus</div>
-            <ul>
+            <ul class="nav-links">
                 <li><a href="#home"><i class="fas fa-home"></i> Home</a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropbtn"><i class="fas fa-camera"></i> Gallery <i class="fas fa-caret-down"></i></a>
+                    <a href="#gallery" class="dropbtn"><i class="fas fa-camera"></i> Gallery <i class="fas fa-caret-down"></i></a>
                     <div class="dropdown-content">
-                        <a href="sports">Sports</a>
-                        <a href="featured">Featured</a>
-                        <a href="events">Events</a>
-                        <a href="portraits">Portraits</a>
+                        <a href="#sports">Sports</a>
+                        <a href="#featured">Featured</a>
+                        <a href="#events">Events</a>
+                        <a href="#portraits">Portraits</a>
                     </div>
                 </li>
                 <li><a href="#about"><i class="fas fa-user"></i> About</a></li>
@@ -32,10 +33,10 @@
     </header>
 
     <main>
-        <section id="home" class="parallax-section" data-speed="0.5">
+        <section id="home" class="parallax-section">
             <div class="content">
                 <img src="/manav/images/company/logo-with-icon.png" alt="Sport Focus Logo" class="logo-image" data-aos="fade-up">
-                <!-- <div class="tagline" data-aos="fade-up" data-aos-delay="400">Capturing Motion, Emotion, and Moments</div> !-->
+                <h1 class="tagline" data-aos="fade-up" data-aos-delay="400">Capturing Motion, Emotion, and Moments</h1>
             </div>
         </section>
 
@@ -49,25 +50,25 @@
             </div>
             <div class="gallery-container">
                 <div class="gallery-item" data-aos="zoom-in" data-category="sports">
-                    <img src="https://picsum.photos/1080/1080" alt="Sport Photography 1" data-src="https://picsum.photos/200/300?grayscale">
+                    <img src="https://picsum.photos/1080/1080" alt="Football Action" data-src="https://picsum.photos/1080/1080?sports=1">
                     <div class="overlay">
                         <span>Football Action</span>
                     </div>
                 </div>
                 <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100" data-category="sports">
-                    <img src="https://picsum.photos/1080/1080" alt="Sport Photography 2" data-src="https://picsum.photos/200/300?grayscale">
+                    <img src="https://picsum.photos/1080/1080" alt="Basketball Intensity" data-src="https://picsum.photos/1080/1080?sports=2">
                     <div class="overlay">
                         <span>Basketball Intensity</span>
                     </div>
                 </div>
                 <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200" data-category="events">
-                    <img src="https://picsum.photos/1080/1080" alt="Sport Photography 3" data-src="https://picsum.photos/200/300?grayscale">
+                    <img src="https://picsum.photos/1080/1080" alt="Swimming Champions" data-src="https://picsum.photos/1080/1080?events=1">
                     <div class="overlay">
                         <span>Swimming Champions</span>
                     </div>
                 </div>
                 <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300" data-category="portraits">
-                    <img src="https://picsum.photos/1080/1080" alt="Sport Photography 4" data-src="https://picsum.photos/200/300?grayscale">
+                    <img src="https://picsum.photos/1080/1080" alt="Tennis Precision" data-src="https://picsum.photos/1080/1080?portraits=1">
                     <div class="overlay">
                         <span>Tennis Precision</span>
                     </div>
@@ -75,7 +76,7 @@
             </div>
         </section>
 
-        <section id="about" class="parallax-section" data-speed="0.3">
+        <section id="about" class="parallax-section">
             <div class="content">
                 <h2 data-aos="fade-up">About Manav</h2>
                 <p data-aos="fade-up" data-aos-delay="200">Passionate sports photographer with over a decade of experience capturing the intensity, grace, and drama of athletic performances across various disciplines.</p>
@@ -116,11 +117,13 @@
 
     <footer>
         <div class="social-icons">
-            <a href="https://www.instagram.com/manavphotography_/" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.linkedin.com/in/manav-parmar-039a24248/" target="_blank"><i class="fab fa-linkedin"></i></a>
+            <a href="https://www.instagram.com/manavphotography_/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.linkedin.com/in/manav-parmar-039a24248/" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
         </div>
         <p>&copy; 2024 Sport Focus by Manav. All rights reserved.</p>
     </footer>
+
+    <button id="scroll-top" class="scroll-top-btn" aria-label="Scroll to top"><i class="fas fa-chevron-up"></i></button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="script.js"></script>
