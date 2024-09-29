@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="/manav/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <header id="main-header">
         <nav class="navbar">
             <div class="logo">
-                <img src="/manav/images/company/logo-small.png" alt="Sport Focus Logo" class="logo-image">
+                <img src="images/logo-small.png" alt="Sport Focus Logo" class="logo-image">
                 <span>Sport Focus</span>
             </div>
             <ul class="nav-links">
@@ -22,10 +22,10 @@
                 <li class="dropdown">
                     <a href="#gallery" class="dropbtn"><i class="fas fa-camera"></i> Gallery <i class="fas fa-caret-down"></i></a>
                     <div class="dropdown-content">
-                        <a href="sports">Sports</a>
-                        <a href="featured">Featured</a>
-                        <a href="events">Events</a>
-                        <a href="portraits">Portraits</a>
+                        <a href="#sports">Sports</a>
+                        <a href="#featured">Featured</a>
+                        <a href="#events">Events</a>
+                        <a href="#portraits">Portraits</a>
                     </div>
                 </li>
                 <li><a href="#about"><i class="fas fa-user"></i> About</a></li>
@@ -40,8 +40,10 @@
         <section id="home" class="parallax-section">
             <div class="content">
                 <div class="logo-container" data-aos="fade-up">
-                    <img src="/manav/images/company/logo-with-icon.png" alt="Sport Focus Logo" class="logo-image-large">
+                    <img src="images/logo-with-icon.png" alt="Sport Focus Logo" class="logo-image-large">
                 </div>
+                <h1 data-aos="fade-up" data-aos-delay="200">Capturing Athletic Excellence</h1>
+                <p class="tagline" data-aos="fade-up" data-aos-delay="400">Professional sports photography that brings your moments to life</p>
                 <a href="#gallery" class="cta-button" data-aos="fade-up" data-aos-delay="600">Explore Gallery</a>
             </div>
         </section>
@@ -56,29 +58,30 @@
             </div>
             <div class="gallery-container">
                 <div class="gallery-item" data-aos="zoom-in" data-category="sports">
-                    <img src="/manav/images/featured/cover.png" alt="Football Action" loading="lazy">
+                    <img src="images/gallery/sports-1.jpg" alt="Football Action" loading="lazy">
                     <div class="overlay">
                         <span>Football Action</span>
                     </div>
                 </div>
                 <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100" data-category="sports">
-                    <img src="/manav/images/featured/cover.png" alt="Basketball Intensity" loading="lazy">
+                    <img src="images/gallery/sports-2.jpg" alt="Basketball Intensity" loading="lazy">
                     <div class="overlay">
                         <span>Basketball Intensity</span>
                     </div>
                 </div>
                 <div class="gallery-item" data-aos="zoom-in" data-aos-delay="200" data-category="events">
-                    <img src="/manav/images/featured/cover.png" alt="Swimming Champions" loading="lazy">
+                    <img src="images/gallery/event-1.jpg" alt="Music Festival" loading="lazy">
                     <div class="overlay">
-                        <span>Swimming Champions</span>
+                        <span>Music Festival</span>
                     </div>
                 </div>
                 <div class="gallery-item" data-aos="zoom-in" data-aos-delay="300" data-category="portraits">
-                    <img src="/manav/images/featured/cover.png" alt="Tennis Precision" loading="lazy">
+                    <img src="images/gallery/portrait-1.jpg" alt="Athlete Portrait" loading="lazy">
                     <div class="overlay">
-                        <span>Tennis Precision</span>
+                        <span>Athlete Portrait</span>
                     </div>
                 </div>
+                <!-- Add more gallery items here -->
             </div>
         </section>
 
@@ -86,8 +89,11 @@
             <div class="content">
                 <h2 data-aos="fade-up">About Manav</h2>
                 <div class="about-content" data-aos="fade-up" data-aos-delay="200">
-                    <img src="/manav/images/featured/cover.png" alt="Manav Portrait" class="about-image">
-                    <p>Manav is a passionate sports photographer with over a decade of experience capturing the intensity, grace, and drama of athletic performances across various disciplines. His unique eye for detail and commitment to storytelling through images have made him a sought-after professional in the world of sports photography.</p>
+                    <img src="images/manav-portrait.jpg" alt="Manav Portrait" class="about-image">
+                    <div class="about-text">
+                        <p>Manav is a passionate sports photographer with over a decade of experience capturing the intensity, grace, and drama of athletic performances across various disciplines. His unique eye for detail and commitment to storytelling through images have made him a sought-after professional in the world of sports photography.</p>
+                        <p>With a background in both photography and sports, Manav brings a deep understanding of athletic movements and game dynamics to his work, allowing him to anticipate and capture those split-second moments that define sporting excellence.</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -95,21 +101,75 @@
         <section id="services">
             <h2 data-aos="fade-up">Services</h2>
             <div class="services-container">
-                <div class="service-item" data-aos="fade-up">
-                    <i class="fas fa-running"></i>
-                    <h3>Event Coverage</h3>
-                    <p>Comprehensive photography for sporting events and tournaments, ensuring every crucial moment is captured with precision.</p>
+                <div class="service-item standard" data-aos="fade-up">
+                    <h3>Standard</h3>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Professional Equipment</li>
+                        <li><i class="fas fa-check"></i> Post-Processing</li>
+                        <li><i class="fas fa-check"></i> Digital Delivery</li>
+                        <li><i class="fas fa-check"></i> Print (Optional $)</li>
+                    </ul>
                 </div>
                 <div class="service-item" data-aos="fade-up" data-aos-delay="100">
-                    <i class="fas fa-user-friends"></i>
-                    <h3>Team Portraits</h3>
-                    <p>Professional team and individual athlete portrait sessions that showcase personality and team spirit.</p>
+                    <h3>1 Hour</h3>
+                    <h4>Options:</h4>
+                    <ul>
+                        <li><i class="fas fa-camera"></i> Headshots</li>
+                        <li><i class="fas fa-users"></i> Family Portraits</li>
+                        <li><i class="fas fa-paw"></i> Pet Photography</li>
+                        <li><i class="fas fa-box"></i> Product Photography</li>
+                        <li><i class="fas fa-hiking"></i> Life Style Photos</li>
+                        <li><i class="fas fa-car"></i> Car Shots</li>
+                        <li><i class="fas fa-graduation-cap"></i> Student Club Events</li>
+                    </ul>
+                    <p class="price">Total Cost: $150 (Before tax)</p>
                 </div>
                 <div class="service-item" data-aos="fade-up" data-aos-delay="200">
-                    <i class="fas fa-edit"></i>
-                    <h3>Custom Editing</h3>
-                    <p>High-quality post-processing and photo editing services to ensure your images look their absolute best.</p>
+                    <h3>2 Hours</h3>
+                    <h4>Options:</h4>
+                    <ul>
+                        <li><i class="fas fa-camera"></i> Headshots</li>
+                        <li><i class="fas fa-heart"></i> Engagement Photos</li>
+                        <li><i class="fas fa-paw"></i> Pet Photography</li>
+                        <li><i class="fas fa-box"></i> Product Photography</li>
+                        <li><i class="fas fa-hiking"></i> Life Style Photos</li>
+                        <li><i class="fas fa-graduation-cap"></i> Student Club Events</li>
+                    </ul>
+                    <p class="price">Total Cost: $260 (Before tax)</p>
                 </div>
+                <div class="service-item" data-aos="fade-up" data-aos-delay="300">
+                    <h3>3 Hours</h3>
+                    <h4>Options:</h4>
+                    <ul>
+                        <li><i class="fas fa-heart"></i> Engagement Photos</li>
+                        <li><i class="fas fa-box"></i> Product Photography</li>
+                        <li><i class="fas fa-hiking"></i> Life Style Photos</li>
+                        <li><i class="fas fa-graduation-cap"></i> Student Club Events</li>
+                        <li><i class="fas fa-glass-cheers"></i> Club Events</li>
+                    </ul>
+                    <p class="price">Total Cost: $320 (Before tax)</p>
+                </div>
+                <div class="service-item" data-aos="fade-up" data-aos-delay="400">
+                    <h3>All Day</h3>
+                    <h4>Options:</h4>
+                    <ul>
+                        <li><i class="fas fa-ring"></i> Weddings</li>
+                        <li><i class="fas fa-music"></i> Music Festivals</li>
+                        <li><i class="fas fa-running"></i> Sporting Events</li>
+                        <li><i class="fas fa-heart"></i> Engagement Photo</li>
+                        <li><i class="fas fa-graduation-cap"></i> Student Clubs Events</li>
+                        <li><i class="fas fa-briefcase"></i> Corporate Events</li>
+                    </ul>
+                    <p class="price">Total Cost: $450 (Before tax)</p>
+                </div>
+            </div>
+            <div class="custom-service" data-aos="fade-up" data-aos-delay="500">
+                <h3>Custom</h3>
+                <p>Don't see the service that you need?<br>
+                Looking for a custom amount of hours?<br>
+                No problem! I'm flexible and happy to tailor my services to meet your specific needs.<br>
+                Please feel free to contact me to discuss your unique requirements.</p>
+                <a href="#contact" class="cta-button">Contact for Custom Service</a>
             </div>
         </section>
 
@@ -127,7 +187,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-logo">
-                <img src="/manav/images/company/logo-small.png" alt="Sport Focus Logo" class="logo-image">
+                <img src="images/logo-small.png" alt="Sport Focus Logo" class="logo-image">
                 <span>Sport Focus</span>
             </div>
             <div class="social-icons">
