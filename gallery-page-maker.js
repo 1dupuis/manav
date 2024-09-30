@@ -132,7 +132,7 @@ const createGalleryPage = (() => {
                             .catch(() => {
                                 const fallbackImg = createElement('img', {
                                     src: 'https://via.placeholder.com/400x300?text=Thumbnail+Not+Found',
-                                    alt: 'Thumbnail not found',
+                                    alt: 'Hover to Load Image',
                                     class: 'thumbnail'
                                 });
                                 placeholder.appendChild(fallbackImg);
