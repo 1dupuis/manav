@@ -1,6 +1,8 @@
 // gallery-page-maker.js
 
-(function(window) {
+window.GalleryPageMaker = window.GalleryPageMaker || {};
+
+(function(exports) {
     'use strict';
 
     // Configuration
@@ -154,9 +156,13 @@
 
     // Core functions
     function createGalleryPage(title) {
+        console.log("createGalleryPage called with title:", title);
         setPageStructure(title);
         domManager.init();
-        if (!domManager.photoGrid) return;  // Exit if photo grid is not found
+        if (!domManager.photoGrid) {
+            console.error("Photo grid element not found");
+            return;
+        }
         setupEventListeners();
         loadImages();
     }
@@ -294,13 +300,17 @@
     }
 
     // Make createGalleryPage function globally accessible
-    window.createGalleryPage = createGalleryPage;
+    exports.createGalleryPage = createGalleryPage;
 
-    // Initialize
-    if (document.readyState !== 'loading') {
-        createGalleryPage(document.title || 'Gallery');
-    } else {
-        document.addEventListener('DOMContentLoaded', () => createGalleryPage(document.title || 'Gallery'));
-    }
+})(window.GalleryPageMaker);
 
-})(window);
+if (document.readyState !== 'loading') {
+    console.log("DOM already loaded, initializing gallery...");
+    window.GalleryPageMaker.createGalleryPage(document.title || 'Gallery');
+} else {
+    console.log("DOM not yet loaded, adding event listener...");
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log("DOM loaded, initializing gallery...");
+        window.GalleryPageMaker.createGalleryPage(document.title || 'Gallery');
+    });
+}
