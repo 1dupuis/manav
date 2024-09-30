@@ -1,6 +1,6 @@
 // gallery-page-maker.js
 
-(function() {
+(function(window) {
     'use strict';
 
     // Configuration
@@ -64,6 +64,10 @@
         
         init: function() {
             this.photoGrid = document.getElementById('photo-grid');
+            if (!this.photoGrid) {
+                console.error('Photo grid element not found');
+                return;
+            }
             this.createModal();
         },
         
@@ -152,22 +156,21 @@
     function createGalleryPage(title) {
         setPageStructure(title);
         domManager.init();
+        if (!domManager.photoGrid) return;  // Exit if photo grid is not found
         setupEventListeners();
         loadImages();
     }
 
     function setPageStructure(title) {
         document.documentElement.lang = 'en';
-        document.head.innerHTML = `
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        document.head.innerHTML += `
             <title>${title}</title>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
             <link rel="stylesheet" href="styles.css">
             <link rel="stylesheet" href="about-styles.css">
         `;
 
-        document.body.innerHTML = `
+        const mainContent = `
             <header>
                 <nav>
                     <div class="logo">Sport Focus</div>
@@ -188,12 +191,19 @@
             </footer>
         `;
 
+        // Append main content to body if it doesn't exist
+        if (!document.querySelector('main')) {
+            document.body.innerHTML += mainContent;
+        }
+
         // Add necessary scripts
         const scripts = ['script.js', 'about.js'];
         scripts.forEach(src => {
-            const script = document.createElement('script');
-            script.src = src;
-            document.body.appendChild(script);
+            if (!document.querySelector(`script[src="${src}"]`)) {
+                const script = document.createElement('script');
+                script.src = src;
+                document.body.appendChild(script);
+            }
         });
     }
 
@@ -283,10 +293,14 @@
         });
     }
 
+    // Make createGalleryPage function globally accessible
+    window.createGalleryPage = createGalleryPage;
+
     // Initialize
     if (document.readyState !== 'loading') {
         createGalleryPage(document.title || 'Gallery');
     } else {
         document.addEventListener('DOMContentLoaded', () => createGalleryPage(document.title || 'Gallery'));
     }
-})();
+
+})(window);
