@@ -82,6 +82,31 @@ const createGalleryPage = (() => {
             });
         };
 
+        const showFullResolution = (placeholder, src) => {
+            preloadImage(src)
+                .then(img => {
+                    const fullResImg = img.cloneNode();
+                    fullResImg.alt = placeholder.dataset.alt;
+                    fullResImg.classList.add('full-resolution');
+                    placeholder.appendChild(fullResImg);
+                })
+                .catch(() => {
+                    const fallbackImg = createElement('img', {
+                        src: 'https://via.placeholder.com/400x300?text=Image+Not+Found',
+                        alt: 'Image not found',
+                        class: 'full-resolution'
+                    });
+                    placeholder.appendChild(fallbackImg);
+                });
+        };
+
+        const hideFullResolution = (placeholder) => {
+            const fullResImg = placeholder.querySelector('.full-resolution');
+            if (fullResImg) {
+                fullResImg.remove();
+            }
+        };
+
         return (pageName, images) => {
             const photoGrid = document.getElementById('photo-grid');
             if (!images || images.length === 0) {
@@ -95,18 +120,22 @@ const createGalleryPage = (() => {
                     if (entry.isIntersecting) {
                         const placeholder = entry.target;
                         const src = placeholder.dataset.src;
-                        preloadImage(src)
+                        const thumbnailSrc = `/images/${pageName}/thumbnails/${src.split('/').pop()}`;
+                        
+                        preloadImage(thumbnailSrc)
                             .then(img => {
-                                const newImg = img.cloneNode();
-                                newImg.alt = placeholder.dataset.alt;
-                                placeholder.parentNode.replaceChild(newImg, placeholder);
+                                const thumbnailImg = img.cloneNode();
+                                thumbnailImg.alt = placeholder.dataset.alt;
+                                thumbnailImg.classList.add('thumbnail');
+                                placeholder.appendChild(thumbnailImg);
                             })
                             .catch(() => {
                                 const fallbackImg = createElement('img', {
-                                    src: 'https://via.placeholder.com/400x300?text=Image+Not+Found',
-                                    alt: 'Image not found'
+                                    src: 'https://via.placeholder.com/400x300?text=Thumbnail+Not+Found',
+                                    alt: 'Thumbnail not found',
+                                    class: 'thumbnail'
                                 });
-                                placeholder.parentNode.replaceChild(fallbackImg, placeholder);
+                                placeholder.appendChild(fallbackImg);
                             })
                             .finally(() => {
                                 observer.unobserve(placeholder);
@@ -126,8 +155,28 @@ const createGalleryPage = (() => {
                     }),
                     createElement('div', { class: 'photo-caption' }, [image.caption])
                 ]);
+                
+                const placeholder = photoItem.firstChild;
+                
+                placeholder.addEventListener('mouseenter', () => {
+                    showFullResolution(placeholder, `/images/${pageName}/${image.src}`);
+                });
+                
+                placeholder.addEventListener('mouseleave', () => {
+                    hideFullResolution(placeholder);
+                });
+                
+                placeholder.addEventListener('click', () => {
+                    const fullResImg = placeholder.querySelector('.full-resolution');
+                    if (fullResImg) {
+                        hideFullResolution(placeholder);
+                    } else {
+                        showFullResolution(placeholder, `/images/${pageName}/${image.src}`);
+                    }
+                });
+                
                 fragment.appendChild(photoItem);
-                imagesToLoad.add(photoItem.firstChild);
+                imagesToLoad.add(placeholder);
             });
             photoGrid.appendChild(fragment);
 
@@ -142,7 +191,6 @@ const createGalleryPage = (() => {
 
         const pageName = window.location.pathname.split('/').pop().replace('.html', '').toLowerCase();
         
-        // Ensure galleryConfig is available and log its content
         if (typeof galleryConfig === 'undefined') {
             console.error('galleryConfig is not defined');
             return;
@@ -167,7 +215,6 @@ const createGalleryPage = (() => {
     };
 })();
 
-// Ensure galleryConfig is loaded before initializing the page
 function initializeGallery() {
     if (typeof galleryConfig !== 'undefined') {
         createGalleryPage(document.title || 'Gallery');
