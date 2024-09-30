@@ -1,7 +1,7 @@
 // gallery-config.js
 
 const galleryConfig = {
-    [lep-athletic-banquet]: [
+    lepAthleticBanquet: [
         { src: '_MG_4395.jpg', caption: 'Featured Image 1' },
         { src: '_MG_4399.jpg', caption: 'Featured Image 1' },
         { src: '_MG_4405.jpg', caption: 'Featured Image 1' },
