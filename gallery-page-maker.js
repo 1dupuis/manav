@@ -18,7 +18,7 @@ function createGalleryPage(title) {
             <nav>
                 <div class="logo">Sport Focus</div>
                 <ul>
-                    <li><a href=""><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
                 </ul>
                 <div class="menu-toggle"><i class="fas fa-bars"></i></div>
             </nav>
