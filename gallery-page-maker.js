@@ -84,8 +84,9 @@ const createGalleryPage = (() => {
 
         return (pageName, images) => {
             const photoGrid = document.getElementById('photo-grid');
-            if (images.length === 0) {
+            if (!images || images.length === 0) {
                 photoGrid.textContent = 'No images found for this gallery.';
+                console.error('No images found for gallery:', pageName);
                 return;
             }
 
@@ -96,7 +97,9 @@ const createGalleryPage = (() => {
                         const src = placeholder.dataset.src;
                         preloadImage(src)
                             .then(img => {
-                                placeholder.parentNode.replaceChild(img.cloneNode(), placeholder);
+                                const newImg = img.cloneNode();
+                                newImg.alt = placeholder.dataset.alt;
+                                placeholder.parentNode.replaceChild(newImg, placeholder);
                             })
                             .catch(() => {
                                 const fallbackImg = createElement('img', {
@@ -138,7 +141,23 @@ const createGalleryPage = (() => {
         createBody(title);
 
         const pageName = window.location.pathname.split('/').pop().replace('.html', '').toLowerCase();
-        const images = window.galleryConfig?.[pageName] || [];
+        
+        // Ensure galleryConfig is available and log its content
+        if (typeof galleryConfig === 'undefined') {
+            console.error('galleryConfig is not defined');
+            return;
+        }
+        console.log('galleryConfig:', galleryConfig);
+        
+        const images = galleryConfig[pageName];
+        
+        if (!images) {
+            console.error('No images found for page:', pageName);
+            document.getElementById('photo-grid').textContent = 'No images found for this gallery.';
+            return;
+        }
+        
+        console.log('Loading images for page:', pageName, 'Image count:', images.length);
         loadImages(pageName, images);
 
         ['script.js', 'about.js'].forEach(src => {
@@ -148,8 +167,18 @@ const createGalleryPage = (() => {
     };
 })();
 
+// Ensure galleryConfig is loaded before initializing the page
+function initializeGallery() {
+    if (typeof galleryConfig !== 'undefined') {
+        createGalleryPage(document.title || 'Gallery');
+    } else {
+        console.error('galleryConfig is not loaded. Retrying in 100ms...');
+        setTimeout(initializeGallery, 100);
+    }
+}
+
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => createGalleryPage(document.title || 'Gallery'));
+    document.addEventListener('DOMContentLoaded', initializeGallery);
 } else {
-    createGalleryPage(document.title || 'Gallery');
+    initializeGallery();
 }
