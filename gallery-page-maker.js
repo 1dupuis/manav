@@ -18,7 +18,7 @@ function createGalleryPage(title) {
             <nav>
                 <div class="logo">Sport Focus</div>
                 <ul>
-                    <li><a href="/manav"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href=""><i class="fas fa-home"></i> Home</a></li>
                 </ul>
                 <div class="menu-toggle"><i class="fas fa-bars"></i></div>
             </nav>
@@ -61,7 +61,7 @@ function createGalleryPage(title) {
             photoItem.className = 'photo-item' + (index === 0 ? ' large' : '');
 
             const img = document.createElement('img');
-            img.src = `/manav/images/${pageName}/${image.src}`;
+            img.src = `/images/${pageName}/${image.src}`;
             img.alt = image.caption;
             img.loading = 'lazy';
 
