@@ -1,316 +1,155 @@
 // gallery-page-maker.js
 
-window.GalleryPageMaker = window.GalleryPageMaker || {};
-
-(function(exports) {
-    'use strict';
-
-    // Configuration
-    const config = {
-        batchSize: 5,
-        placeholderColor: '#f0f0f0',
-        breakpoints: {
-            small: 640,
-            medium: 1024,
-            large: 1440
-        }
+const createGalleryPage = (() => {
+    const createElement = (tag, attributes = {}, children = []) => {
+        const element = document.createElement(tag);
+        Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+        children.forEach(child => element.appendChild(typeof child === 'string' ? document.createTextNode(child) : child));
+        return element;
     };
 
-    // Utility functions
-    const utils = {
-        debounce: (func, delay) => {
-            let timeoutId;
-            return (...args) => {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => func.apply(null, args), delay);
-            };
-        },
-        getImageSize: () => {
-            const width = window.innerWidth;
-            if (width <= config.breakpoints.small) return 'small';
-            if (width <= config.breakpoints.medium) return 'medium';
-            return 'large';
-        }
+    const createHead = (title) => {
+        document.title = title;
+        const head = document.head;
+        const links = [
+            { rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' },
+            { rel: 'stylesheet', href: 'styles.css' },
+            { rel: 'stylesheet', href: 'about-styles.css' },
+            { rel: 'preconnect', href: 'https://via.placeholder.com' }
+        ];
+        links.forEach(link => head.appendChild(createElement('link', link)));
     };
 
-    // Image loading and management
-    const imageManager = {
-        images: [],
-        currentIndex: 0,
-        
-        setImages: function(newImages) {
-            this.images = newImages;
-            this.currentIndex = 0;
-        },
-        
-        getNextBatch: function() {
-            const start = this.currentIndex;
-            const end = Math.min(start + config.batchSize, this.images.length);
-            this.currentIndex = end;
-            return this.images.slice(start, end);
-        },
-        
-        hasMore: function() {
-            return this.currentIndex < this.images.length;
-        },
-        
-        reset: function() {
-            this.currentIndex = 0;
-        }
+    const createBody = (title) => {
+        const body = document.body;
+        body.innerHTML = ''; // Clear existing content
+        body.appendChild(createElement('header', {}, [
+            createElement('nav', {}, [
+                createElement('div', { class: 'logo' }, ['Sport Focus']),
+                createElement('ul', {}, [
+                    createElement('li', {}, [
+                        createElement('a', { href: '/' }, [
+                            createElement('i', { class: 'fas fa-home' }),
+                            ' Home'
+                        ])
+                    ])
+                ]),
+                createElement('div', { class: 'menu-toggle' }, [
+                    createElement('i', { class: 'fas fa-bars' })
+                ])
+            ])
+        ]));
+        body.appendChild(createElement('main', { class: 'about-page' }, [
+            createElement('section', { class: 'intro' }, [
+                createElement('h1', {}, [title])
+            ]),
+            createElement('div', { id: 'photo-grid', class: 'photo-grid' })
+        ]));
+        body.appendChild(createElement('footer', {}, [
+            createElement('p', {}, [`© ${new Date().getFullYear()} Sport Focus by Manav. All rights reserved.`])
+        ]));
     };
 
-    // DOM manipulation
-    const domManager = {
-        photoGrid: null,
-        modal: null,
-        
-        init: function() {
-            this.photoGrid = document.getElementById('photo-grid');
-            if (!this.photoGrid) {
-                console.error('Photo grid element not found');
+    const loadImages = (() => {
+        const imageCache = new Map();
+        const imagesToLoad = new Set();
+        let observer;
+
+        const preloadImage = (src) => {
+            if (imageCache.has(src)) return Promise.resolve(imageCache.get(src));
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => {
+                    imageCache.set(src, img);
+                    resolve(img);
+                };
+                img.onerror = () => {
+                    const fallbackSrc = `https://via.placeholder.com/400x300?text=Image+Not+Found`;
+                    imageCache.set(src, fallbackSrc);
+                    reject(new Error('Image load failed'));
+                };
+                img.src = src;
+            });
+        };
+
+        const loadVisibleImages = () => {
+            imagesToLoad.forEach(placeholder => {
+                if (placeholder.isConnected) {
+                    observer.observe(placeholder);
+                } else {
+                    imagesToLoad.delete(placeholder);
+                }
+            });
+        };
+
+        return (pageName, images) => {
+            const photoGrid = document.getElementById('photo-grid');
+            if (images.length === 0) {
+                photoGrid.textContent = 'No images found for this gallery.';
                 return;
             }
-            this.createModal();
-        },
-        
-        createModal: function() {
-            this.modal = document.createElement('div');
-            this.modal.className = 'image-modal';
-            this.modal.innerHTML = `
-                <span class="close">&times;</span>
-                <img class="modal-content" alt="Modal Image">
-                <div class="modal-caption"></div>
-                <button class="prev">&#10094;</button>
-                <button class="next">&#10095;</button>
-            `;
-            document.body.appendChild(this.modal);
-        },
-        
-        createPlaceholder: function(image, index) {
-            const photoItem = document.createElement('div');
-            photoItem.className = 'photo-item' + (index === 0 ? ' large' : '');
-            photoItem.innerHTML = `
-                <div class="placeholder" style="background-color: ${config.placeholderColor};" data-src="${image.src}">
-                    <div class="spinner"></div>
-                </div>
-                <div class="photo-caption">${image.caption}</div>
-            `;
-            return photoItem;
-        },
-        
-        appendImages: function(images) {
+
+            observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const placeholder = entry.target;
+                        const src = placeholder.dataset.src;
+                        preloadImage(src)
+                            .then(img => {
+                                placeholder.parentNode.replaceChild(img.cloneNode(), placeholder);
+                            })
+                            .catch(() => {
+                                const fallbackImg = createElement('img', {
+                                    src: 'https://via.placeholder.com/400x300?text=Image+Not+Found',
+                                    alt: 'Image not found'
+                                });
+                                placeholder.parentNode.replaceChild(fallbackImg, placeholder);
+                            })
+                            .finally(() => {
+                                observer.unobserve(placeholder);
+                                imagesToLoad.delete(placeholder);
+                            });
+                    }
+                });
+            }, { rootMargin: '200px' });
+
             const fragment = document.createDocumentFragment();
             images.forEach((image, index) => {
-                fragment.appendChild(this.createPlaceholder(image, imageManager.currentIndex + index));
+                const photoItem = createElement('div', { class: `photo-item${index === 0 ? ' large' : ''}` }, [
+                    createElement('div', {
+                        class: 'image-placeholder',
+                        'data-src': `/images/${pageName}/${image.src}`,
+                        'data-alt': image.caption
+                    }),
+                    createElement('div', { class: 'photo-caption' }, [image.caption])
+                ]);
+                fragment.appendChild(photoItem);
+                imagesToLoad.add(photoItem.firstChild);
             });
-            this.photoGrid.appendChild(fragment);
-        },
-        
-        updateModalImage: function(src, caption) {
-            const modalImg = this.modal.querySelector('.modal-content');
-            const captionText = this.modal.querySelector('.modal-caption');
-            modalImg.src = src;
-            captionText.textContent = caption;
-        }
-    };
+            photoGrid.appendChild(fragment);
 
-    // Event handlers
-    const eventHandlers = {
-        onScroll: utils.debounce(() => {
-            if (imageManager.hasMore() && isBottomVisible()) {
-                loadNextBatch();
-            }
-        }, 200),
-        
-        onImageClick: (e) => {
-            const img = e.target.closest('.photo-item img');
-            if (img) {
-                openModal(img);
-            }
-        },
-        
-        onCloseModal: () => {
-            domManager.modal.style.display = 'none';
-        },
-        
-        onPrevImage: () => {
-            navigateImage(-1);
-        },
-        
-        onNextImage: () => {
-            navigateImage(1);
-        },
-        
-        onKeyDown: (e) => {
-            if (domManager.modal.style.display === 'block') {
-                if (e.key === 'ArrowLeft') navigateImage(-1);
-                else if (e.key === 'ArrowRight') navigateImage(1);
-                else if (e.key === 'Escape') eventHandlers.onCloseModal();
-            }
-        },
-        
-        onResize: utils.debounce(() => {
-            updateImageSources();
-        }, 200)
-    };
+            requestIdleCallback(loadVisibleImages);
+        };
+    })();
 
-    // Core functions
-    function createGalleryPage(title) {
-        console.log("createGalleryPage called with title:", title);
-        setPageStructure(title);
-        domManager.init();
-        if (!domManager.photoGrid) {
-            console.error("Photo grid element not found");
-            return;
-        }
-        setupEventListeners();
-        loadImages();
-    }
-
-    function setPageStructure(title) {
+    return (title) => {
         document.documentElement.lang = 'en';
-        document.head.innerHTML += `
-            <title>${title}</title>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-            <link rel="stylesheet" href="styles.css">
-            <link rel="stylesheet" href="about-styles.css">
-        `;
+        createHead(title);
+        createBody(title);
 
-        const mainContent = `
-            <header>
-                <nav>
-                    <div class="logo">Sport Focus</div>
-                    <ul>
-                        <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
-                    </ul>
-                    <div class="menu-toggle"><i class="fas fa-bars"></i></div>
-                </nav>
-            </header>
-            <main class="about-page">
-                <section class="intro">
-                    <h1>${title}</h1>
-                </section>
-                <div id="photo-grid" class="photo-grid"></div>
-            </main>
-            <footer>
-                <p>&copy; ${new Date().getFullYear()} Sport Focus by Manav. All rights reserved.</p>
-            </footer>
-        `;
-
-        // Append main content to body if it doesn't exist
-        if (!document.querySelector('main')) {
-            document.body.innerHTML += mainContent;
-        }
-
-        // Add necessary scripts
-        const scripts = ['script.js', 'about.js'];
-        scripts.forEach(src => {
-            if (!document.querySelector(`script[src="${src}"]`)) {
-                const script = document.createElement('script');
-                script.src = src;
-                document.body.appendChild(script);
-            }
-        });
-    }
-
-    function setupEventListeners() {
-        window.addEventListener('scroll', eventHandlers.onScroll);
-        window.addEventListener('resize', eventHandlers.onResize);
-        domManager.photoGrid.addEventListener('click', eventHandlers.onImageClick);
-        domManager.modal.querySelector('.close').addEventListener('click', eventHandlers.onCloseModal);
-        domManager.modal.querySelector('.prev').addEventListener('click', eventHandlers.onPrevImage);
-        domManager.modal.querySelector('.next').addEventListener('click', eventHandlers.onNextImage);
-        document.addEventListener('keydown', eventHandlers.onKeyDown);
-    }
-
-    function loadImages() {
         const pageName = window.location.pathname.split('/').pop().replace('.html', '').toLowerCase();
-        const images = window.galleryConfig && window.galleryConfig[pageName] ? window.galleryConfig[pageName] : [];
+        const images = window.galleryConfig?.[pageName] || [];
+        loadImages(pageName, images);
 
-        if (images.length === 0) {
-            domManager.photoGrid.innerHTML = '<p>No images found for this gallery.</p>';
-            return;
-        }
-
-        imageManager.setImages(images);
-        loadNextBatch();
-    }
-
-    function loadNextBatch() {
-        const images = imageManager.getNextBatch();
-        domManager.appendImages(images);
-        images.forEach((_, index) => {
-            const placeholder = domManager.photoGrid.children[imageManager.currentIndex - config.batchSize + index].querySelector('.placeholder');
-            loadImage(placeholder);
+        ['script.js', 'about.js'].forEach(src => {
+            const script = createElement('script', { src, async: true });
+            document.body.appendChild(script);
         });
-    }
+    };
+})();
 
-    function loadImage(placeholder) {
-        const img = new Image();
-        const size = utils.getImageSize();
-        img.src = placeholder.dataset.src.replace('.jpg', `_${size}.jpg`);
-        img.alt = placeholder.nextElementSibling.textContent;
-
-        img.onload = function() {
-            placeholder.innerHTML = '';
-            placeholder.appendChild(img);
-            placeholder.classList.add('loaded');
-        };
-
-        img.onerror = function() {
-            placeholder.innerHTML = 'Image not found';
-            placeholder.classList.add('error');
-        };
-    }
-
-    function isBottomVisible() {
-        const rect = domManager.photoGrid.getBoundingClientRect();
-        return rect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
-    }
-
-    function openModal(img) {
-        domManager.modal.style.display = 'block';
-        domManager.updateModalImage(img.src, img.alt);
-    }
-
-    function navigateImage(direction) {
-        const currentImg = domManager.modal.querySelector('.modal-content');
-        const currentItem = Array.from(domManager.photoGrid.children).find(item => item.querySelector('img').src === currentImg.src);
-        let nextItem = currentItem[direction > 0 ? 'nextElementSibling' : 'previousElementSibling'];
-        
-        if (!nextItem && direction > 0 && imageManager.hasMore()) {
-            loadNextBatch();
-            nextItem = currentItem.nextElementSibling;
-        }
-
-        if (nextItem) {
-            const nextImg = nextItem.querySelector('img');
-            if (nextImg) {
-                domManager.updateModalImage(nextImg.src, nextImg.alt);
-            }
-        }
-    }
-
-    function updateImageSources() {
-        const size = utils.getImageSize();
-        const images = domManager.photoGrid.querySelectorAll('img');
-        images.forEach(img => {
-            img.src = img.src.replace(/_(?:small|medium|large)\.jpg/, `_${size}.jpg`);
-        });
-    }
-
-    // Make createGalleryPage function globally accessible
-    exports.createGalleryPage = createGalleryPage;
-
-})(window.GalleryPageMaker);
-
-if (document.readyState !== 'loading') {
-    console.log("DOM already loaded, initializing gallery...");
-    window.GalleryPageMaker.createGalleryPage(document.title || 'Gallery');
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => createGalleryPage(document.title || 'Gallery'));
 } else {
-    console.log("DOM not yet loaded, adding event listener...");
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log("DOM loaded, initializing gallery...");
-        window.GalleryPageMaker.createGalleryPage(document.title || 'Gallery');
-    });
+    createGalleryPage(document.title || 'Gallery');
 }
